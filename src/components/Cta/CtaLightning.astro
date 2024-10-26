@@ -1,0 +1,111 @@
+---
+/**
+ * * CTA card with a cool lightning flash effect
+ */
+
+import { Icon } from "astro-icon";
+import { Image } from "astro:assets";
+
+// components
+import Button from "@components/Button/Button.astro";
+
+// image
+import stormImage from "@images/lightning-2.jpg";
+---
+
+<section class="overflow-hidden py-20">
+  <div class="site-container">
+    <div
+      class="grid overflow-hidden rounded-2xl border border-base-800 bg-base-900 md:grid-cols-2 dark:bg-base-950"
+    >
+      <div
+        class="dark mx-auto max-w-md p-6 text-center md:max-w-none md:p-10 md:text-left"
+      >
+        <h2 class="h2 mb-6 text-3xl md:text-5xl">
+          Make your next website incredible.
+        </h2>
+        <div class="relative z-10 flex justify-center md:justify-start">
+          <Button
+            variant="primary"
+            href="https://cosmicthemes.com/themes/amplify/"
+            target="_blank"
+            rel="noopener noreferrer"
+            arrow="right"
+          >
+            Get Amplify
+          </Button>
+        </div>
+        <ul
+          class="mt-14 flex flex-wrap justify-center gap-3 text-sm md:mt-24 md:justify-start md:text-base"
+        >
+          <li>
+            <div class="description flex flex-wrap items-center gap-1">
+              <Icon
+                name="tabler/check"
+                class="size-4 md:size-5"
+                aria-hidden="true"
+              />
+              <span class="tracking-tight">Seamless Collaboration</span>
+            </div>
+          </li>
+          <li>
+            <div class="description flex flex-wrap items-center gap-1">
+              <Icon
+                name="tabler/check"
+                class="size-4 md:size-5"
+                aria-hidden="true"
+              />
+              <span class="tracking-tight">Customizable Workflows</span>
+            </div>
+          </li>
+          <li>
+            <div class="description flex flex-wrap items-center gap-1">
+              <Icon
+                name="tabler/check"
+                class="size-4 md:size-5"
+                aria-hidden="true"
+              />
+              <span class="tracking-tight">Comprehensive Reporting</span>
+            </div>
+          </li>
+          <li>
+            <div class="description flex flex-wrap items-center gap-1">
+              <Icon
+                name="tabler/check"
+                class="size-4 md:size-5"
+                aria-hidden="true"
+              />
+              <span class="tracking-tight">Intuitive Interface</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="relative mx-auto w-full">
+        <!-- image fade out on desktop view -->
+        <!-- <div
+          class="absolute left-0 top-0 z-20 hidden h-full w-[20%] bg-gradient-to-r from-base-900 from-20% via-base-900/60 to-transparent md:block dark:from-base-950 dark:via-base-950/60"
+        >
+        </div> -->
+        <Image
+          src={stormImage}
+          alt="storm"
+          loading="lazy"
+          height={420}
+          densities={[1.5, 2]}
+          class="absolute inset-x-0 z-10 h-auto w-full animate-flash object-cover brightness-[3] md:h-full md:w-auto"
+          aria-hidden="true"
+        />
+        <Image
+          src={stormImage}
+          alt="storm"
+          loading="lazy"
+          width={420}
+          densities={[1.5, 2]}
+          class="relative inset-x-0 h-auto w-full object-cover md:h-full md:w-auto"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+  </div>
+</section>

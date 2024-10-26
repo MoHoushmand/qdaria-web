@@ -1,0 +1,67 @@
+---
+/**
+ * * CTA centered with background image
+ */
+
+import { Icon } from "astro-icon";
+import { Image } from "astro:assets";
+
+// components
+import Button from "@components/Button/Button.astro";
+
+// take a look at the actual images to see recommended dimensions
+import bgImage from "@images/storm-bg.webp";
+import bgImageMobile from "@images/storm-bg-mobile2.webp";
+---
+
+<section id="cta-center" class="dark overflow-hidden">
+  <div class="relative overflow-hidden py-24 lg:py-36">
+    <!-- bg image -->
+    <div class="absolute inset-0 h-full overflow-hidden">
+      <!-- mobile image -->
+      <Image
+        src={bgImageMobile}
+        alt="background"
+        loading="lazy"
+        width={600}
+        densities={[1, 1.5, 2]}
+        class="h-full w-full object-cover brightness-50 sm:hidden"
+        aria-hidden="true"
+      />
+      <!-- desktop image -->
+      <Image
+        src={bgImage}
+        alt="background"
+        loading="lazy"
+        width={1170}
+        densities={[1, 1.5, 2]}
+        class="hidden h-full w-full object-cover brightness-50 sm:block"
+        aria-hidden="true"
+      />
+    </div>
+
+    <div class="site-container relative">
+      <div class="mx-auto max-w-3xl text-center">
+        <h2 class="h2 mb-8 text-base-50">Make your next website incredible</h2>
+        <p
+          class="mx-auto mb-20 max-w-xl tracking-tight text-base-200 md:text-xl"
+        >
+          A template for the next killer SaaS. Multiple pages and sections,
+          blog, i18n, animations, CMS - all ready to go.
+        </p>
+        <div class="relative flex justify-center">
+          <Button
+            variant="outline"
+            href="https://cosmicthemes.com/themes/amplify/"
+            target="_blank"
+            arrow="right"
+            rel="noopener noreferrer"
+            class="px-8 py-3.5 text-lg dark:border-base-100"
+          >
+            Get Amplify
+          </Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

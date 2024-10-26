@@ -1,0 +1,24 @@
+---
+// layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import TestimonialsSwiperQuotes from "@components/Testimonials/TestimonialsSwiperQuotes.astro";
+import TestimonialsColumns from "@components/Testimonials/TestimonialsColumns.astro";
+import TestimonialsMarquee from "@components/Testimonials/TestimonialsMarquee.astro";
+
+import FaqAccordions from "@components/Faq/FaqAccordions.astro";
+import FaqCards from "@components/Faq/FaqCards.astro";
+---
+
+<BaseLayout
+  title="Testimonial and FAQ sections"
+  description="All of the Testimonial and FAQ sections included with the Amplify theme"
+>
+  <hr class="pt-20" />
+  <TestimonialsMarquee />
+  <FaqAccordions />
+  <TestimonialsSwiperQuotes />
+  <FaqCards />
+  <TestimonialsColumns />
+</BaseLayout>

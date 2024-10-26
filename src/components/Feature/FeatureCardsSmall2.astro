@@ -1,0 +1,74 @@
+---
+/**
+ * * These are small cards with titles, and text, and a check icon
+ * This looks best with an even number of cards. They are smaller to
+ * use with more cards in the same section. 4 or 6 cards is probably ideal
+ *
+ * ! I copy all icons into the src/icons folder and recommend you do the same
+ * ! If the icon is at src/icons/tabler/paint.svg then you put in "tabler/paint"
+ */
+
+import { Icon } from "astro-icon";
+
+// components
+import FeatureCard from "@components/FeatureCard/FeatureCardSmall2.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+interface FeatureData {
+  title: string;
+  text: string;
+}
+
+// data
+const featureData: FeatureData[] = [
+  {
+    title: "Connect all our contacts",
+    text: `Sync with your calendar apps and contacts. Google, Outlook, ProtonMail, and more.`,
+  },
+  {
+    title: "Dashboards for all businesses",
+    text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit totam delectus
+            rerum, reiciendis quisquam cum sunt.`,
+  },
+  {
+    title: "Synced to the cloud",
+    text: `Your data is accessible from everywhere, syncing across all your devices.`,
+  },
+  {
+    title: "Your business intelligence, simplified",
+    text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit totam delectus
+            rerum.`,
+  },
+  {
+    title: "Real-time insights at your fingertips",
+    text: `Data syncs across your team instantly. Real-time access, with 99.9% uptime.`,
+  },
+  {
+    title: "Connects to popular apps",
+    text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit totam delectus
+            rerum, reiciendis quisquam cum sunt.`,
+  },
+];
+---
+
+<section id="feature-cards-small-2" class="overflow-hidden py-16 md:py-20">
+  <div class="site-container relative">
+    <div class="mb-16 mr-auto md:max-w-4xl">
+      <h2 class="h2 inline" id="trigger-cards-small-2" data-aos="fade-right">
+        Feature Snapshot
+      </h2>
+    </div>
+    <div
+      class="grid gap-16 sm:grid-cols-2 lg:grid-cols-3"
+      data-aos="fade-right"
+      data-aos-delay=".3"
+      data-aos-trigger="#trigger-cards-small-2"
+    >
+      {
+        featureData.map((feature, idx) => (
+          <FeatureCard title={feature.title} text={feature.text} />
+        ))
+      }
+    </div>
+  </div>
+</section>

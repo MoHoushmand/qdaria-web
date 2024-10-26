@@ -1,0 +1,160 @@
+---
+import { type CollectionEntry, getEntries } from "astro:content";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon";
+
+// main layout
+import BaseLayout from "./BaseLayout.astro";
+
+// components
+import Category from "@components/Category/Category.astro";
+import Button from "@components/Button/Button.astro";
+import TableOfContents from "@components/TableOfContents/TableOfContents.astro";
+
+// utils
+import { formatDate, humanize, slugify } from "@js/textUtils";
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { useTranslations } from "@js/translationUtils";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+  headings: import("astro").MarkdownHeading[];
+}
+
+const { post, headings } = Astro.props as Props;
+const {
+  title,
+  description,
+  authors,
+  categories,
+  pubDate,
+  updatedDate,
+  heroImage,
+} = post.data;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+const authorsData = await getEntries(authors);
+---
+
+<BaseLayout
+  type="blog"
+  title={title}
+  description={description}
+  image={heroImage}
+  authorsData={authorsData}
+  postFrontmatter={post.data}
+>
+  <article class="site-container mt-20 md:mt-28">
+    <!-- Blog post info -->
+    <div class="flex w-full flex-col items-center">
+      <div class="mx-auto flex w-full max-w-[800px]">
+        <div class="mx-auto text-center">
+          <!-- categories -->
+          <div class="flex w-full justify-center gap-3 md:text-lg">
+            {categories.map((category) => <Category category={category} />)}
+          </div>
+
+          <!-- title -->
+          <div class="flex justify-center">
+            <h1 class="h2 mt-4">{title}</h1>
+          </div>
+          <div
+            class="description mt-2 flex w-full flex-wrap justify-center gap-3"
+          >
+            <!-- author info -->
+            {
+              authorsData.map((authorData) => (
+                <div class="mb-auto flex">
+                  <figure>
+                    <Image
+                      src={authorData.data.avatar}
+                      alt={`${authorData.data.name} avatar`}
+                      width={100}
+                      quality="high"
+                      loading="eager"
+                      class="h-7 w-7 rounded-full border border-base-300 object-cover dark:border-base-700"
+                    />
+                  </figure>
+                  <div class="my-auto ml-2">{authorData.data.name}</div>
+                </div>
+              ))
+            }
+
+            <span>&bull;</span>
+
+            <!-- Date -->
+            <time class="my-auto h-full" datetime={pubDate.toISOString()}
+              >{formatDate(pubDate, currLocale)}
+            </time>
+          </div>
+        </div>
+      </div>
+
+      <!-- blog post main image -->
+      <div
+        class="mt-6 overflow-hidden rounded-xl border border-base-300 dark:border-base-700"
+      >
+        <Image
+          src={heroImage}
+          alt={`Cover for ${title}`}
+          width={1408}
+          quality="high"
+          densities={[1.5, 2]}
+          class="max-h-[70vh] object-cover"
+          loading="eager"
+          format="webp"
+        />
+      </div>
+    </div>
+
+    <!-- article content -->
+    <div class="mt-10 w-full">
+      <div
+        class="mx-auto flex max-w-2xl flex-col gap-6 lg:grid lg:max-w-none lg:grid-cols-12"
+      >
+        <!-- left sidebar -->
+        <aside class="hidden lg:col-span-2 lg:block">
+          <div class="sticky top-20">
+            <div class="h-[calc(100vh-6rem)] overflow-y-auto">
+              <!-- You can put a CTA or whatever else you want here -->
+              <!-- <div class="h-full w-full bg-blue-500"></div> -->
+            </div>
+          </div>
+        </aside>
+
+        <!-- Content -->
+        <div class="text-base-content text-base lg:col-span-7">
+          {
+            updatedDate && (
+              <div class="mb-6 italic">
+                <time datetime={updatedDate.toISOString()}>
+                  Updated: {formatDate(updatedDate, currLocale)}
+                </time>
+              </div>
+            )
+          }
+          <section id="blog-post-content" class="prose mx-auto md:text-lg">
+            <slot />
+          </section>
+
+          <!-- button to go back to all posts -->
+          <div class="mt-10 flex justify-center">
+            <Button variant="outline" href="/blog/" arrow="left">
+              Back to all posts
+            </Button>
+          </div>
+        </div>
+
+        <!-- Table of Contents sidebar -->
+        <aside class="hidden lg:col-span-3 lg:block">
+          <div class="sticky top-20">
+            <div class="h-[calc(100vh-6rem)] overflow-y-auto">
+              <TableOfContents headings={headings} levels={3} />
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

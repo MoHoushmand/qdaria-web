@@ -1,0 +1,98 @@
+---
+/**
+ * * pricing section for one price only
+ * For those who like to keep it simple
+ */
+
+import { Icon } from "astro-icon";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// components
+import Button from "@components/Button/Button.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { useTranslations } from "@js/translationUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+
+interface pricingItem {
+  name: string; // plan name
+  description: string; // plan description
+  price: {
+    monthly: number; // monthly price
+  };
+  cardBullets: string[]; // list of card bullets
+}
+
+const pricingData: pricingItem = {
+  name: "Solo",
+  description: "All features for one low monthly price.",
+  price: {
+    monthly: 19,
+  },
+  cardBullets: [
+    "Price Per User",
+    "Unlimited Projects",
+    "No Attribution Required",
+    "150+ Integrations",
+    "Email Support",
+  ],
+};
+---
+
+<section id="pricing" class="overflow-clip py-16 lg:py-20">
+  <div class="site-container">
+    <div class="grid gap-10 md:grid-cols-2 lg:gap-20">
+      <div class="mx-auto flex h-full max-w-lg flex-col md:mr-auto">
+        <Badge>Pricing</Badge>
+        <h2 class="h2">Elevate your brand with a beautiful website.</h2>
+        <p class="description mt-4 text-lg tracking-tight">
+          Simple one plan pricing that fits for everyone. No hidden fees, no
+          extra charges.
+        </p>
+      </div>
+      <div
+        class="relative mx-auto w-full max-w-lg rounded-xl border border-primary-300 bg-base-100 p-8 before:absolute before:inset-0.5 before:-z-10 before:rounded-md before:bg-blue-500 before:blur md:ml-auto md:max-w-md lg:p-12 dark:bg-base-950"
+      >
+        <h3
+          class="mb-6 text-lg font-medium tracking-tight text-primary-600 dark:text-primary-400"
+        >
+          {pricingData.name}
+        </h3>
+        <p class="mt-6 text-4xl font-medium tracking-tight">
+          From ${pricingData.price.monthly} / mo
+        </p>
+        <p class="description mx-auto mt-2 tracking-tight">
+          {pricingData.description}
+        </p>
+        <div class="relative z-10">
+          <Button
+            variant="primary"
+            class="mt-8"
+            href={getRelativeLocaleUrl(currLocale, "/signup")}
+          >
+            Get Started
+          </Button>
+        </div>
+        <p class="mt-8">What you'll get</p>
+        <ul class="mt-2">
+          {
+            pricingData.cardBullets.map((bullet) => (
+              <li class="flex items-center py-1.5">
+                <div class="mr-2 inline-block">
+                  <Icon name="tabler/point" class="size-4" aria-hidden="true" />
+                </div>
+                <span class="description font-medium tracking-tight">
+                  {bullet}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,76 @@
+---
+import {
+  type InferGetStaticPropsType,
+  type InferGetStaticParamsType,
+} from "astro";
+
+// main layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+import BlogPostsLayout from "@layouts/BlogPostsLayout1.astro";
+
+// components
+import CategoryCloud from "@components/CategoryCloud/CategoryCloud.astro";
+import Badge from "@components/Badge/Badge.astro";
+import PostCard from "@components/PostCard/PostCardAmplify.astro";
+
+// utils
+import { getAllPosts, countItems, sortByValue } from "@js/blogUtils";
+import { slugify, humanize } from "@js/textUtils";
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { defaultLocale } from "@config/siteSettings.json";
+
+// generate pagination for tag pages if there are a bunch of posts for a single tag
+export async function getStaticPaths() {
+  const posts = await getAllPosts("fr");
+  const allCategories = posts.map((post) => post.data.categories).flat();
+  const countedCategories = countItems(allCategories);
+  const processedCategories = sortByValue(countedCategories);
+
+  return processedCategories.map(([category, count]) => ({
+    params: { category: category },
+  }));
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
+
+// const filteredPosts = Astro.props as Props;
+const { category } = Astro.params as Params;
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const posts = await getAllPosts(currLocale);
+const filteredPosts = posts.filter((post) => {
+  // make sure to slugify them for comparison
+  const slugifiedCategory = post.data.categories.map((category) =>
+    slugify(category),
+  );
+
+  return slugifiedCategory.includes(category);
+});
+---
+
+<BaseLayout
+  title={`Our Blog Posts on ${humanize(category)}`}
+  description="Learn from our blog posts about web development, design, and more."
+>
+  <section class="site-container overflow-x-clip">
+    <div class="pt-28 md:pt-36">
+      <div class="mr-auto flex w-fit max-w-[950px] flex-col">
+        <!-- <Badge>Blog</Badge> -->
+        <h1 class="h1">
+          Articles on <span class="">{humanize(category).toLowerCase()}</span>
+        </h1>
+        <!-- <p class="description mx-auto mt-0 max-w-2xl text-center md:text-lg">
+          Use and re-use tons of responsive sections to create the perfect
+          layout. Sections are organised into convenient categories.
+        </p> -->
+      </div>
+
+      <div class="mb-10 mt-4 flex md:mb-20">
+        <CategoryCloud />
+      </div>
+    </div>
+
+    <BlogPostsLayout posts={filteredPosts} />
+  </section>
+</BaseLayout>

@@ -1,0 +1,211 @@
+---
+/**
+ * * Integrations list
+ *
+ * ! I copy all icons into the src/icons folder and recommend you do the same
+ * ! If the icon is at src/icons/tabler/paint.svg then you put in "tabler/paint"
+ */
+import { Icon } from "astro-icon";
+
+interface CardData {
+  icon: string;
+  company: string;
+}
+
+interface FeatureData {
+  topRow: CardData[]; // icon locations for astro-icon
+  botRow: CardData[];
+}
+
+// components
+import Badge from "@components/Badge/Badge.astro";
+import FeatureCardIntegration from "@components/FeatureCard/FeatureCardIntegration.astro";
+
+// data
+const featureData: FeatureData = {
+  topRow: [
+    {
+      icon: "amplify/brands/dropbox",
+      company: "Dropbox",
+    },
+    {
+      icon: "amplify/brands/shopify",
+      company: "Shopify",
+    },
+    {
+      icon: "amplify/brands/hubspot",
+      company: "Hubspot",
+    },
+    {
+      icon: "amplify/brands/slack",
+      company: "Slack",
+    },
+    {
+      icon: "amplify/brands/shopify",
+      company: "Shopify",
+    },
+    {
+      icon: "amplify/brands/zapier",
+      company: "Zapier",
+    },
+    {
+      icon: "amplify/brands/hubspot",
+      company: "Hubspot",
+    },
+  ],
+  botRow: [
+    {
+      icon: "amplify/brands/intercom",
+      company: "Intercom",
+    },
+    {
+      icon: "amplify/brands/zapier",
+      company: "Zapier",
+    },
+    {
+      icon: "amplify/brands/kickstarter",
+      company: "Kickstarter",
+    },
+    {
+      icon: "amplify/brands/mailchimp",
+      company: "Mailchimp",
+    },
+    {
+      icon: "amplify/brands/dropbox",
+      company: "Dropbox",
+    },
+    {
+      icon: "amplify/brands/intercom",
+      company: "Intercom",
+    },
+    {
+      icon: "amplify/brands/hubspot",
+      company: "Hubspot",
+    },
+  ],
+};
+---
+
+<section
+  id="feature-integrations"
+  class="mx-auto max-w-[1800px] overflow-x-hidden px-4 py-16 md:py-20"
+>
+  <div class="site-container">
+    <div class="mx-auto mb-16 max-w-xl text-center">
+      <Badge>300+ tools available</Badge>
+      <h2 class="h2 main-text-gradient">
+        Integrate it with your favourite tools
+      </h2>
+      <!-- <p class="description mt-4 text-xl tracking-tight">
+        Use and reuse tons of responsive sections to create the perfect layout.
+        Sections are ready.
+      </p> -->
+    </div>
+  </div>
+
+  <div class="relative">
+    <!-- left fade-out -->
+    <div
+      class="absolute -left-px top-0 z-10 h-full w-[15%] bg-gradient-to-r from-base-50 from-20% to-transparent dark:from-dark-bg"
+    >
+    </div>
+    <!-- right fade-out -->
+    <div
+      class="absolute -right-px top-0 z-10 h-full w-[15%] bg-gradient-to-r from-transparent to-base-50 to-80% dark:to-dark-bg"
+    >
+    </div>
+
+    <div class="relative flex flex-col gap-0 overflow-hidden">
+      <!-- marquee top row -->
+      <div class="marquee-top-integrations relative flex gap-0 overflow-hidden">
+        <div
+          class="animate-marquee-integrations flex min-w-full shrink-0 items-center justify-around gap-0"
+        >
+          {
+            featureData.topRow.map((card, idx) => (
+              <FeatureCardIntegration icon={card.icon} company={card.company} />
+            ))
+          }
+        </div>
+        <div
+          aria-hidden="true"
+          class="animate-marquee-integrations flex min-w-full shrink-0 items-center justify-around gap-0"
+        >
+          {
+            featureData.topRow.map((card, idx) => (
+              <FeatureCardIntegration icon={card.icon} company={card.company} />
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- marquee bottom row -->
+      <div class="marquee-bot-integrations relative flex gap-0 overflow-hidden">
+        <div
+          class="animate-marquee-integrations flex min-w-full shrink-0 items-center justify-around gap-0 [animation-direction:reverse]"
+        >
+          {
+            featureData.botRow.map((card, idx) => (
+              <FeatureCardIntegration icon={card.icon} company={card.company} />
+            ))
+          }
+        </div>
+        <div
+          aria-hidden="true"
+          class="animate-marquee-integrations flex min-w-full shrink-0 items-center justify-around gap-0 [animation-direction:reverse]"
+        >
+          {
+            featureData.botRow.map((card, idx) => (
+              <FeatureCardIntegration icon={card.icon} company={card.company} />
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const setupMarquee = () => {
+    const marqueeTop = document.querySelector(".marquee-top-integrations");
+    const marqueeBottom = document.querySelector(".marquee-bot-integrations");
+
+    // add the clauss "pause" when the mouse enters the marquee
+    marqueeTop?.addEventListener("mouseover", () => {
+      marqueeTop
+        .querySelectorAll(".animate-marquee-integrations")
+        .forEach((el) => {
+          el.classList.add("pause");
+        });
+    });
+    marqueeBottom?.addEventListener("mouseover", () => {
+      marqueeBottom
+        .querySelectorAll(".animate-marquee-integrations")
+        .forEach((el) => {
+          el.classList.add("pause");
+        });
+    });
+
+    // remove the class "pause" when the mouse leaves the marquee
+    marqueeTop?.addEventListener("mouseout", () => {
+      marqueeTop
+        .querySelectorAll(".animate-marquee-integrations")
+        .forEach((el) => {
+          el.classList.remove("pause");
+        });
+    });
+    marqueeBottom?.addEventListener("mouseout", () => {
+      marqueeBottom
+        .querySelectorAll(".animate-marquee-integrations")
+        .forEach((el) => {
+          el.classList.remove("pause");
+        });
+    });
+  };
+
+  // runs on initial page load
+  setupMarquee();
+
+  // runs on view transitions navigation
+  document.addEventListener("astro:after-swap", setupMarquee);
+</script>

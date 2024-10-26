@@ -1,0 +1,22 @@
+---
+import { Icon } from "astro-icon";
+
+interface Props {
+  icon: string;
+  social: string; // used for aria label
+  href: string;
+}
+
+const { icon, social, href } = Astro.props as Props;
+---
+
+<a
+  aria-label={social}
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class="rounded-full border border-base-300 p-2 text-base-700 transition duration-200 hover:border-primary-400 dark:border-base-700 dark:text-base-300 dark:hover:border-base-600"
+>
+  <p class="sr-only">{social}</p>
+  <Icon name={icon} class="size-5 transition" aria-hidden="true" />
+</a>

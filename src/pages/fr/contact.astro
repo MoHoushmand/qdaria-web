@@ -1,0 +1,43 @@
+---
+import { Icon } from "astro-icon";
+
+// main layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import ContactForm from "@components/Forms/ContactForm.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getTranslatedData } from "@js/translationUtils";
+
+// data
+const currLocale = getLocaleFromUrl(Astro.url);
+const siteData = getTranslatedData("siteData", currLocale);
+---
+
+<BaseLayout
+  title="Contact Me"
+  description="Get in touch! Contact us using this page."
+>
+  <div class="site-container mt-14">
+    <section class="overflow-hidden pt-16 lg:py-28">
+      <div class="flex flex-wrap">
+        <div class="w-full p-8 md:w-1/2">
+          <div class="mx-auto h-full max-w-lg md:ml-0">
+            <Badge>you're the best</Badge>
+            <h1 class="h2">Have questions? Use this form to contact us.</h1>
+            <p class="description text-lg">
+              A template for the next killer SaaS. Multiple pages and sections,
+              blog, i18n, animations, CMS - all ready to go.
+            </p>
+          </div>
+        </div>
+        <div class="mx-auto w-full max-w-xl p-8 md:mr-0 md:w-1/2">
+          <ContactForm />
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import { Image } from "astro:assets";
+
+import { type teamMember } from "@config/types/configDataTypes";
+
+const { image, name, title, bio } = Astro.props as teamMember;
+---
+
+<div class="w-full">
+  <div
+    class="hover-border-glow h-full rounded-xl border border-base-200 bg-base-100 p-6 dark:border dark:border-base-800 dark:bg-base-950"
+  >
+    <Image
+      src={image}
+      alt={name}
+      height={112}
+      densities={[1.5, 2]}
+      class="mb-6 mr-auto aspect-square size-20 rounded-full border border-base-200 object-cover md:size-28 dark:border-base-800"
+    />
+    <h3
+      class="main-text-gradient mb-2 text-2xl font-medium leading-tight tracking-tight md:text-3xl md:leading-tight"
+    >
+      {name}
+    </h3>
+    <span class="mb-6 inline-block text-primary-600 dark:text-primary-400"
+      >{title}</span
+    >
+    <p class="description">{bio}</p>
+  </div>
+</div>

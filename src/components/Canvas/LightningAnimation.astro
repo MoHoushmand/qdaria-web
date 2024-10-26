@@ -1,0 +1,684 @@
+---
+/**
+ * * Lightning Canvas Animation. Only one on a page!
+ * Credit below! I have updated it to be responsive, have the rotation movement, and with the newest packages
+ */
+
+/*
+Copyright (c) 2024 by Akimitsu Hamamuro (https://codepen.io/akm2/pen/DbNJXr)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+---
+
+<canvas id="lightning" class="lightning aspect-square h-auto w-full"></canvas>
+
+<script>
+  const lightningConfig = {
+    color: "hsl(0, 0%, 100%)",
+    arcSpeed: 0.02,
+    particleSpeed: 0.1,
+    amplitude: 1.5,
+    lineWidth: 4,
+    blur: 60,
+    blurColor: "hsl(217, 91%, 60%)",
+    childNum: 2, // number of additional lightning strands
+    pushDistance: 30000, // separation distance at which the points start pushing each other away
+    pullDistance: 120000, // separation distance at which the points starting pulling toward each other
+    inset: 65, // points inset from the edge of the canvas
+    movingPoints: true, // if the points are moving
+    circleMotion: true, // if the points are moving in a circle. requires movingPoints to be true. If false, the points move randomly
+    circleSpeed: 0.003, // degree increment = speed of the circle motion
+    pointsDraggable: false, // if the points are draggable - this currently doesn't work
+  };
+
+  import { createNoise2D } from "simplex-noise";
+  // import * as dat from "dat.gui";
+
+  /**
+   * requestAnimationFrame
+   */
+  window.requestAnimationFrame = (function () {
+    return (
+      window.requestAnimationFrame ||
+      function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+      }
+    );
+  })();
+
+  /**
+   * Vector
+   */
+  interface VectorType {
+    x: number;
+    y: number;
+  }
+  function Vector(x?: number, y?: number) {
+    this.x = x || 0;
+    this.y = y || 0;
+  }
+
+  Vector.add = function (a: VectorType, b: VectorType) {
+    return new Vector(a.x + b.x, a.y + b.y);
+  };
+
+  Vector.sub = function (a: VectorType, b: VectorType) {
+    return new Vector(a.x - b.x, a.y - b.y);
+  };
+
+  Vector.prototype = {
+    set: function (x?: VectorType | number, y?: VectorType | number) {
+      if (typeof x === "object") {
+        y = x.y;
+        x = x.x;
+      }
+      this.x = x || 0;
+      this.y = y || 0;
+      return this;
+    },
+
+    add: function (v: VectorType) {
+      this.x += v.x;
+      this.y += v.y;
+      return this;
+    },
+
+    sub: function (v: VectorType) {
+      this.x -= v.x;
+      this.y -= v.y;
+      return this;
+    },
+
+    scale: function (s: number) {
+      this.x *= s;
+      this.y *= s;
+      return this;
+    },
+
+    length: function () {
+      return Math.sqrt(this.x * this.x + this.y * this.y);
+    },
+
+    normalize: function () {
+      var len = Math.sqrt(this.x * this.x + this.y * this.y);
+      if (len) {
+        this.x /= len;
+        this.y /= len;
+      }
+      return this;
+    },
+
+    angle: function () {
+      return Math.atan2(this.y, this.x);
+    },
+
+    distanceTo: function (v: VectorType) {
+      var dx = v.x - this.x,
+        dy = v.y - this.y;
+      return Math.sqrt(dx * dx + dy * dy);
+    },
+
+    distanceToSq: function (v: VectorType) {
+      var dx = v.x - this.x,
+        dy = v.y - this.y;
+      return dx * dx + dy * dy;
+    },
+
+    clone: function () {
+      return new Vector(this.x, this.y);
+    },
+  };
+
+  /**
+   * Point
+   */
+  function Point(x: number, y: number, radius: number) {
+    Vector.call(this, x, y);
+
+    this.radius = radius || 7;
+
+    this.vec = new Vector(random(1, -1), random(1, -1)).normalize();
+    this._easeRadius = this.radius;
+    this._currentRadius = this.radius;
+  }
+
+  /**
+   * Point
+   */
+  Point.prototype = (function (o) {
+    var s = new Vector(0, 0),
+      p;
+    for (p in o) {
+      s[p] = o[p];
+    }
+    return s;
+  })({
+    // particle color
+    color: lightningConfig.color,
+    dragging: false,
+    _latestDrag: null,
+
+    update: function (points, bounds, distance) {
+      this._currentRadius = random(this._easeRadius, this._easeRadius * 0.35);
+      this._easeRadius += (this.radius - this._easeRadius) * 0.1;
+
+      if (this.dragging) return;
+
+      if (lightningConfig.movingPoints) {
+        var vec = this.vec,
+          i,
+          len,
+          p,
+          d;
+
+        if (lightningConfig.circleMotion) {
+          // points move in a circle pattern. They are currently on the edges of the "circle" and maintain the same distance from the center
+          const cx = bounds.x + bounds.width * 0.5;
+          const cy = bounds.y + bounds.height * 0.5;
+          const angle =
+            Math.atan2(this.y - cy, this.x - cx) + lightningConfig.circleSpeed;
+          // const distance = 200;
+
+          this.x = cx + Math.cos(angle) * distance;
+          this.y = cy + Math.sin(angle) * distance;
+        } else {
+          // random point motion
+          for (i = 0, len = points.length; i < len; i++) {
+            p = points[i];
+            if (p !== this) {
+              d = this.distanceToSq(p);
+              if (d < lightningConfig.pushDistance) {
+                vec.add(Vector.sub(this, p).normalize().scale(0.01));
+              } else if (d > lightningConfig.pullDistance) {
+                vec.add(Vector.sub(p, this).normalize().scale(0.015));
+              }
+            }
+          }
+
+          if (vec.length() > 3) vec.normalize().scale(3);
+
+          this.add(vec);
+
+          if (this.x < bounds.x) {
+            this.x = bounds.x;
+            if (vec.x < 0) vec.x *= -1;
+          } else if (this.x > bounds.right) {
+            this.x = bounds.right;
+            if (vec.x > 0) vec.x *= -1;
+          }
+
+          if (this.y < bounds.y) {
+            this.y = bounds.y;
+            if (vec.y < 0) vec.y *= -1;
+          } else if (this.y > bounds.bottom) {
+            this.y = bounds.bottom;
+            if (vec.y > 0) vec.y *= -1;
+          }
+        }
+      }
+    },
+
+    hitTest: function (p: VectorType) {
+      if (this.distanceToSq(p) < 900) {
+        this._easeRadius = this.radius * 2.5;
+        return true;
+      }
+      return false;
+    },
+
+    startDrag: function () {
+      this.dragging = true;
+      this.vec.set(0, 0);
+
+      this._latestDrag = new Vector().set(this);
+    },
+
+    drag: function (p: VectorType) {
+      this._latestDrag.set(this);
+      this.set(p);
+    },
+
+    endDrag: function () {
+      this.vec = Vector.sub(this, this._latestDrag);
+      this.dragging = false;
+    },
+
+    draw: function (ctx) {
+      ctx.save();
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this._currentRadius, 0, Math.PI * 2, false);
+      ctx.fill();
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = this.color;
+      ctx.fillStyle = "rgba(0, 0, 0, 1)";
+      ctx.globalCompositeOperation = "lighter";
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this._currentRadius, 0, Math.PI * 2, false);
+      ctx.fill();
+      ctx.restore();
+    },
+  });
+
+  /**
+   * Lightning
+   */
+  function Lightning(
+    startPoint?: VectorType,
+    endPoint?: VectorType,
+    step?: number,
+  ) {
+    this.startPoint = startPoint || new Vector();
+
+    this.endPoint = endPoint || new Vector();
+    this.step = step || 35;
+
+    this.children = [];
+  }
+
+  Lightning.prototype = {
+    color: lightningConfig.color,
+    arcSpeed: lightningConfig.arcSpeed,
+    amplitude: lightningConfig.amplitude,
+    lineWidth: lightningConfig.lineWidth,
+    blur: lightningConfig.blur,
+    blurColor: lightningConfig.blurColor,
+    points: null,
+    off: 0,
+    _simplexNoise: createNoise2D(),
+    // Case by child
+    parent: null,
+    startStep: 0,
+    endStep: 0,
+
+    length: function () {
+      return this.startPoint.distanceTo(this.endPoint);
+    },
+
+    getChildNum: function () {
+      return this.children.length;
+    },
+
+    setChildNum: function (num: number) {
+      var children = this.children,
+        child,
+        i,
+        len;
+
+      len = this.children.length;
+
+      if (len > num) {
+        for (i = num; i < len; i++) {
+          children[i].dispose();
+        }
+        children.splice(num, len - num);
+      } else {
+        for (i = len; i < num; i++) {
+          child = new Lightning();
+          child._setAsChild(this);
+          children.push(child);
+        }
+      }
+    },
+
+    update: function () {
+      var startPoint = this.startPoint,
+        endPoint = this.endPoint,
+        length,
+        normal,
+        radian,
+        sinv,
+        cosv,
+        points,
+        off,
+        waveWidth,
+        n,
+        av,
+        ax,
+        ay,
+        bv,
+        bx,
+        by,
+        m,
+        x,
+        y,
+        children,
+        child,
+        i,
+        len;
+
+      if (this.parent) {
+        if (this.endStep > this.parent.step) {
+          this._updateStepsByParent();
+        }
+
+        startPoint.set(this.parent.points[this.startStep]);
+        endPoint.set(this.parent.points[this.endStep]);
+      }
+
+      length = this.length();
+      normal = Vector.sub(endPoint, startPoint)
+        .normalize()
+        .scale(length / this.step);
+      radian = normal.angle();
+      sinv = Math.sin(radian);
+      cosv = Math.cos(radian);
+
+      points = this.points = [];
+      off = this.off += random(this.arcSpeed, this.arcSpeed * 0.2);
+      waveWidth = (this.parent ? length * 1.5 : length) * this.amplitude;
+      if (waveWidth > 750) waveWidth = 750;
+
+      for (i = 0, len = this.step + 1; i < len; i++) {
+        n = i / 60;
+        av = waveWidth * this._noise(n - off, 0) * 0.5;
+        ax = sinv * av;
+        ay = cosv * av;
+
+        bv = waveWidth * this._noise(n + off, 0) * 0.5;
+        bx = sinv * bv;
+        by = cosv * bv;
+
+        m = Math.sin(Math.PI * (i / (len - 1)));
+
+        x = startPoint.x + normal.x * i + (ax - bx) * m;
+        y = startPoint.y + normal.y * i - (ay - by) * m;
+
+        points.push(new Vector(x, y));
+      }
+
+      children = this.children;
+
+      for (i = 0, len = children.length; i < len; i++) {
+        child = children[i];
+        child.color = this.color;
+        child.arcSpeed = this.arcSpeed * 1.35;
+        child.amplitude = this.amplitude;
+        child.lineWidth = this.lineWidth * 0.75;
+        child.blur = this.blur;
+        child.blurColor = this.blurColor;
+        children[i].update();
+      }
+    },
+
+    draw: function (ctx) {
+      var points = this.points,
+        children = this.children,
+        i,
+        len,
+        p,
+        d;
+
+      // Blur
+      if (this.blur) {
+        ctx.save();
+        ctx.globalCompositeOperation = "lighter";
+        ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        ctx.shadowBlur = this.blur;
+        ctx.shadowColor = this.blurColor;
+        ctx.beginPath();
+        for (i = 0, len = points.length; i < len; i++) {
+          p = points[i];
+          d = len > 1 ? p.distanceTo(points[i === len - 1 ? i - 1 : i + 1]) : 0;
+          ctx.moveTo(p.x + d, p.y);
+          ctx.arc(p.x, p.y, d, 0, Math.PI * 2, false);
+        }
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.save();
+      ctx.lineWidth = random(this.lineWidth, 0.5);
+      ctx.strokeStyle = this.color;
+      ctx.beginPath();
+      for (i = 0, len = points.length; i < len; i++) {
+        p = points[i];
+        ctx[i === 0 ? "moveTo" : "lineTo"](p.x, p.y);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      // Draw children
+      for (i = 0, len = this.children.length; i < len; i++) {
+        children[i].draw(ctx);
+      }
+    },
+
+    dispose: function () {
+      if (this._timeoutId) {
+        clearTimeout(this._timeoutId);
+      }
+      this._simplexNoise = null;
+    },
+
+    _noise: function (v: number) {
+      var octaves = 6,
+        fallout = 0.5,
+        amp = 1,
+        f = 1,
+        sum = 0,
+        i;
+
+      for (i = 0; i < octaves; ++i) {
+        amp *= fallout;
+        sum += amp * (this._simplexNoise(v * f, 0) + 1) * 0.5;
+        f *= 2;
+      }
+
+      return sum;
+    },
+
+    _setAsChild: function (lightning) {
+      if (!(lightning instanceof Lightning)) return;
+      this.parent = lightning;
+
+      var self = this,
+        setTimer = function () {
+          self._updateStepsByParent();
+
+          self._timeoutId = setTimeout(setTimer, randint(1500));
+        };
+
+      self._timeoutId = setTimeout(setTimer, randint(1500));
+    },
+
+    _updateStepsByParent: function () {
+      if (!this.parent) return;
+      var parentStep = this.parent.step;
+
+      this.startStep = randint(parentStep - 2);
+      this.endStep =
+        this.startStep + randint(parentStep - this.startStep - 2) + 2;
+      this.step = this.endStep - this.startStep;
+    },
+  };
+
+  /**
+   * Rect
+   */
+  function Rect(x?: number, y?: number, width?: number, height?: number) {
+    const inset = lightningConfig.inset;
+    this.x = (x !== undefined ? x : 0) + inset;
+    this.y = (y !== undefined ? y : 0) + inset;
+    this.width = (width !== undefined ? width : 0) - inset * 2;
+    this.height = (height !== undefined ? height : 0) - inset * 2;
+    // this.x = x || 0;
+    // this.y = y || 0;
+    // this.width = width || 0;
+    // this.height = height || 0;
+    this.right = this.x + this.width;
+    this.bottom = this.y + this.height;
+  }
+
+  // Helpers
+
+  function random(max, min) {
+    if (typeof max !== "number") {
+      return Math.random();
+    } else if (typeof min !== "number") {
+      min = 0;
+    }
+    return Math.random() * (max - min) + min;
+  }
+
+  function randint(max: number, min?: number) {
+    if (!max) return 0;
+    return random(max + 1, min) | 0;
+  }
+
+  // Initialize
+
+  function initLightningCanvas() {
+    // Vars
+
+    var canvas,
+      contexts,
+      context,
+      centerX,
+      centerY,
+      grad,
+      mouse,
+      bounds,
+      points,
+      lightning,
+      gui,
+      control;
+
+    // Event Listeners
+
+    // function resize(canvas) {
+    function resize() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      centerX = canvas.width * 0.5;
+      centerY = canvas.height * 0.5;
+      context = canvas.getContext("2d");
+      // grad = context.createRadialGradient(
+      //   centerX,
+      //   centerY,
+      //   0,
+      //   centerX,
+      //   centerY,
+      //   Math.sqrt(centerX * centerX + centerY * centerY),
+      // );
+      // grad.addColorStop(0, "rgba(0, 0, 0, 0)");
+      // grad.addColorStop(1, "rgba(0, 0, 0, 0.4)");
+
+      const distance = canvas.width / 2 - lightningConfig.inset;
+
+      bounds = new Rect(0, 0, canvas.width, canvas.height);
+
+      mouse = new Vector();
+
+      lightning = new Lightning();
+
+      points = [
+        new Point(centerX - distance, centerY, lightning.lineWidth * 1.25),
+        new Point(centerX + distance, centerY, lightning.lineWidth * 1.25),
+      ];
+
+      lightning.startPoint.set(points[0]);
+      lightning.endPoint.set(points[1]);
+      lightning.setChildNum(lightningConfig.childNum);
+    }
+
+    function mouseMove(e) {
+      mouse.set(e.clientX, e.clientY);
+      console.log(e);
+
+      var i,
+        hit = false;
+      for (i = 0; i < 2; i++) {
+        if ((!hit && points[i].hitTest(mouse)) || points[i].dragging)
+          hit = true;
+      }
+      document.body.style.cursor = hit ? "pointer" : "default";
+    }
+
+    function mouseDown(e) {
+      console.log(e);
+      for (var i = 0; i < 2; i++) {
+        if (points[i].hitTest(mouse)) {
+          points[i].startDrag();
+          return;
+        }
+      }
+    }
+
+    function mouseUp(e) {
+      for (var i = 0; i < 2; i++) {
+        if (points[i].dragging) points[i].endDrag();
+      }
+    }
+
+    // Init
+
+    canvas = document.getElementById("lightning");
+    // const canvasEls = document.querySelectorAll("canvas.lightning");
+
+    window.addEventListener("resize", resize, false);
+    // canvasEls.forEach((canvas) => {
+    resize();
+
+    if (lightningConfig.pointsDraggable) {
+      canvas.addEventListener("mousemove", mouseMove, false);
+      canvas.addEventListener("mousedown", mouseDown, false);
+      canvas.addEventListener("mouseup", mouseUp, false);
+    }
+    // });
+
+    // Start Update
+
+    var loop = function () {
+      if (!canvas) return;
+      // canvasEls.forEach((canvas: HTMLCanvasElement) => {
+      context.save();
+      context.fillStyle = grad;
+
+      // this will have a black background
+      // context.fillRect(0, 0, canvas.width, canvas.height);
+
+      // this will have a transparent background
+      context.clearRect(0, 0, canvas.width, canvas.height);
+
+      context.restore();
+
+      lightning.startPoint.set(points[0]);
+      lightning.endPoint.set(points[1]);
+      lightning.step = Math.ceil(lightning.length() / 10);
+      if (lightning.step < 5) lightning.step = 5;
+
+      lightning.update();
+      lightning.draw(context);
+
+      var i, p, distance;
+      // get distance between the two points and make it an integer
+      distance = points[0].distanceTo(points[1]).toFixed(0);
+      // console.log(distance);
+
+      for (i = 0; i < 2; i++) {
+        p = points[i];
+        if (p.dragging) p.drag(mouse);
+        p.update(points, bounds, distance / 2);
+        p.draw(context);
+      }
+
+      requestAnimationFrame(loop);
+      // });
+    };
+    loop();
+  }
+
+  // don't start the function immediately to help with initial page load
+  // this is timed to match the fade-in animation in the hero section
+  setTimeout(initLightningCanvas, 1000);
+
+  document.addEventListener("astro:after-swap", initLightningCanvas);
+</script>

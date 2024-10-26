@@ -1,0 +1,74 @@
+---
+/**
+ * * Simple contact form to get you started
+ *
+ * See https://cosmicthemes.com/docs/contact-form/ for more information on how to set up a contact form
+ *
+ * Form inputs are styled in "global.scss" as form__input, so you can use them elsewhere on the site
+ */
+
+// components
+import Button from "@components/Button/Button.astro";
+---
+
+<section id="contact" class="ml-auto min-w-fit max-w-2xl md:max-w-md">
+  <form id="contact-form" name="contact" class="flex flex-col gap-4">
+    <input type="hidden" name="form-name" value="contact" />
+    <div>
+      <div class="flex flex-col">
+        <label for="contact-fname" class="form__label sr-only">Full Name</label>
+        <input
+          type="text"
+          class="form__input"
+          name="fname"
+          id="contact-fname"
+          placeholder="first name"
+          required
+        />
+      </div>
+    </div>
+    <div>
+      <label for="contact-email" class="form__label sr-only mb-1"
+        >Email Address</label
+      >
+      <input
+        type="email"
+        class="form__input"
+        name="email"
+        id="contact-email"
+        inputmode="email"
+        placeholder="preferred contact email"
+        required
+      />
+    </div>
+    <div>
+      <label for="contact-phone" class="form__label sr-only mb-1"
+        >Phone Number</label
+      >
+      <input
+        type="tel"
+        class="form__input"
+        name="phone"
+        id="contact-phone"
+        inputmode="tel"
+        placeholder="phone number"
+        required
+      />
+    </div>
+    <div>
+      <label for="contact-services" class="form__label sr-only mb-1"
+        >Message</label
+      >
+      <textarea
+        name="services"
+        class="form__input"
+        id="contact-services"
+        rows="4"
+        placeholder="Reason for contacting us"
+        required></textarea>
+    </div>
+    <Button variant="primary" type="submit" class="rounded-md before:rounded-md"
+      >Submit</Button
+    >
+  </form>
+</section>

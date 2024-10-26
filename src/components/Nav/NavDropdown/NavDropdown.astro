@@ -1,0 +1,66 @@
+---
+/**
+ * * Dropdown menu that opens on hover
+ * This is for non-mobile devices
+ */
+import { Icon } from "astro-icon";
+
+// components
+import NavLink from "@components/Nav/NavLink.astro";
+import { type navDropdownItem } from "@config/types/configDataTypes";
+
+interface Props {
+  navItem: navDropdownItem;
+}
+
+const { navItem } = Astro.props as Props;
+---
+
+<!-- non-mobile dropdown menu -->
+<li class="dropdown group relative">
+  <button
+    class="nav__link--base flex items-center gap-1 rounded-md px-3 py-2 leading-tight transition duration-200"
+    type="button"
+    aria-label={`${navItem.text} dropdown menu`}
+  >
+    {navItem.text}
+    <Icon
+      name="tabler/chevron-down"
+      aria-hidden="true"
+      class="size-3 opacity-70"
+    />
+  </button>
+  <div
+    class="dropdown-content invisible absolute left-0 z-10 opacity-0 transition-all"
+  >
+    <ul
+      class="dropdown--base mt-4 w-[12rem] min-w-[9rem] max-w-[20rem] px-1.5 py-2"
+    >
+      {
+        navItem.dropdown.map((dropdownItem) => (
+          <NavLink navItem={dropdownItem} />
+        ))
+      }
+    </ul>
+  </div>
+</li>
+
+<style lang="scss">
+  .dropdown {
+    // when dropdown is hovered over (mouse) or focused (keyboard tabbing), open it with animation
+    &:hover > .dropdown-content,
+    &:focus-within > .dropdown-content {
+      animation: navDropdownFadeInAnimation ease-out 0.3s forwards;
+      @apply visible opacity-100;
+    }
+  }
+
+  @keyframes navDropdownFadeInAnimation {
+    0% {
+      @apply top-[120%];
+    }
+    100% {
+      @apply top-full;
+    }
+  }
+</style>

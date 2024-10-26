@@ -1,0 +1,32 @@
+---
+/**
+ * * These are small cards with icons and text for the integrations section
+ *
+ * ! I copy all icons into the src/icons folder and recommend you do the same
+ * ! If the icon is at src/icons/tabler/paint.svg then you put in "tabler/paint"
+ */
+
+import { Icon } from "astro-icon";
+
+interface Props {
+  icon: string;
+  company: string;
+}
+
+const { icon, company, ...rest } = Astro.props as Props;
+---
+
+<div class="w-[12rem] flex-shrink-0 p-3 md:w-[16rem] lg:w-[20rem]" {...rest}>
+  <div
+    class="hover-border-glow rounded-xl border border-base-200 bg-base-100 before:rounded-xl dark:border-base-800 dark:bg-base-950"
+  >
+    <div class="flex flex-col items-center p-6">
+      <Icon
+        name={icon}
+        class="size-12 rounded-full bg-base-50 p-px md:size-16"
+        aria-hidden="true"
+      />
+      <p class="mt-3 font-medium tracking-tight md:text-lg">{company}</p>
+    </div>
+  </div>
+</div>

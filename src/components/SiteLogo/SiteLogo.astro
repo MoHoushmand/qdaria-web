@@ -1,0 +1,36 @@
+---
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getTranslatedData } from "@js/translationUtils";
+
+// data
+const currLocale = getLocaleFromUrl(Astro.url);
+const siteData = getTranslatedData("siteData", currLocale);
+
+// images (example, image doesn't actually exist)
+import logo from "@images/amplify-logo.png";
+---
+
+<a
+  class="flex items-center gap-1 align-middle text-xl font-medium text-base-800 dark:text-base-200"
+  href={getRelativeLocaleUrl(currLocale)}
+>
+  <!-- <Image
+    src={logo}
+    alt="Amplify logo"
+    loading="eager"
+    height={90}
+    class="h-12 w-auto"
+    aria-label="Amplify logo"
+  /> -->
+  <Icon
+    name="amplify/amplify-logo"
+    class="size-6 text-primary-500"
+    aria-hidden="true"
+  />
+  <p class="">{siteData.name}</p>
+</a>

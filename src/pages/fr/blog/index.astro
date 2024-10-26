@@ -1,0 +1,40 @@
+---
+// layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+import BlogPostsLayout from "@layouts/BlogPostsLayout2.astro";
+
+// components
+import CategoryCloud from "@components/CategoryCloud/CategoryCloud.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+// utils
+import { getAllPosts } from "@js/blogUtils";
+import { getLocaleFromUrl } from "@js/localeUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const posts = await getAllPosts(currLocale);
+---
+
+<BaseLayout
+  title="Our Blog Posts"
+  description="Learn from our blog posts about web development, design, and more."
+>
+  <section class="site-container overflow-x-clip">
+    <div class="pt-28 md:pt-36">
+      <div class="mr-auto flex w-fit max-w-[950px] flex-col">
+        <!-- <Badge>Blog</Badge> -->
+        <h1 class="h1">Latest Articles</h1>
+        <!-- <p class="description mx-auto mt-0 max-w-2xl text-center md:text-lg">
+          Use and re-use tons of responsive sections to create the perfect
+          layout. Sections are organised into convenient categories.
+        </p> -->
+      </div>
+
+      <div class="mb-10 mt-4 flex md:mb-20">
+        <CategoryCloud />
+      </div>
+    </div>
+
+    <BlogPostsLayout posts={posts} />
+  </section>
+</BaseLayout>

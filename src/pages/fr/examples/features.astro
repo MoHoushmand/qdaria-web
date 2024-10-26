@@ -1,0 +1,31 @@
+---
+// layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import FeatureCardsSmall from "@components/Feature/FeatureCardsSmall.astro";
+import FeatureCardsSmall2 from "@components/Feature/FeatureCardsSmall2.astro";
+import FeatureCardsMedium from "@components/Feature/FeatureCardsMedium.astro";
+import FeatureVideo from "@components/Feature/FeatureVideo.astro";
+import FeatureSideImage from "@components/Feature/FeatureSideImage.astro";
+import FeatureSteps from "@components/Feature/FeatureSteps.astro";
+import FeatureIntegrations from "@components/Feature/FeatureIntegrations.astro";
+import FeatureNumbers from "@components/Feature/FeatureNumbers.astro";
+import FeatureCodeToggle from "@components/Feature/FeatureCodeToggle.astro";
+---
+
+<BaseLayout
+  title="Feature sections"
+  description="All of the feature sections included with the Amplify theme"
+>
+  <hr class="pt-16" />
+  <FeatureCodeToggle />
+  <FeatureSteps />
+  <FeatureCardsSmall />
+  <FeatureNumbers />
+  <FeatureVideo />
+  <FeatureCardsSmall2 />
+  <FeatureIntegrations />
+  <FeatureSideImage />
+  <FeatureCardsMedium />
+</BaseLayout>

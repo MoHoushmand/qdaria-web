@@ -1,0 +1,88 @@
+---
+// layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import HeroSideImage from "@components/Hero/HeroSideImage.astro";
+import HeroCentered from "@components/Hero/HeroCentered.astro";
+import HeroSideElectric from "@components/Hero/HeroSideElectric.astro";
+
+import LogoCloudStatic from "@components/LogoCloud/LogoCloudStatic.astro";
+import LogoCloudMarquee from "@components/LogoCloud/LogoCloudMarquee.astro";
+
+import FeatureCardsSmall from "@components/Feature/FeatureCardsSmall.astro";
+import FeatureCardsSmall2 from "@components/Feature/FeatureCardsSmall2.astro";
+import FeatureCardsMedium from "@components/Feature/FeatureCardsMedium.astro";
+import FeatureVideo from "@components/Feature/FeatureVideo.astro";
+import FeatureSideImage from "@components/Feature/FeatureSideImage.astro";
+import FeatureSteps from "@components/Feature/FeatureSteps.astro";
+import FeatureIntegrations from "@components/Feature/FeatureIntegrations.astro";
+import FeatureNumbers from "@components/Feature/FeatureNumbers.astro";
+import FeatureCodeToggle from "@components/Feature/FeatureCodeToggle.astro";
+
+import TestimonialsSwiperQuotes from "@components/Testimonials/TestimonialsSwiperQuotes.astro";
+import TestimonialsColumns from "@components/Testimonials/TestimonialsColumns.astro";
+import TestimonialsMarquee from "@components/Testimonials/TestimonialsMarquee.astro";
+
+import PricingThreeCards from "@components/Pricing/PricingThreeCards.astro";
+import PricingFourCards from "@components/Pricing/PricingFourCards.astro";
+import PricingOnePrice from "@components/Pricing/PricingOnePrice.astro";
+import PricingTable from "@components/Pricing/PricingTable.astro";
+
+import CtaSideImage from "@components/Cta/CtaSideImage.astro";
+import CtaCardBgImage from "@components/Cta/CtaCardBgImage.astro";
+import CtaBgImage from "@components/Cta/CtaBgImage.astro";
+import CtaLightning from "@components/Cta/CtaLightning.astro";
+
+import FaqAccordions from "@components/Faq/FaqAccordions.astro";
+import FaqCards from "@components/Faq/FaqCards.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getTranslatedData } from "@js/translationUtils";
+
+// data
+const currLocale = getLocaleFromUrl(Astro.url);
+const siteData = getTranslatedData("siteData", currLocale);
+---
+
+<BaseLayout title={siteData.title} description={siteData.description}>
+  <!-- <HeroSideElectric /> -->
+  <!-- <HeroCentered /> -->
+  <HeroSideImage />
+
+  <LogoCloudMarquee />
+  <!-- <LogoCloudStatic
+    class="dark bg-dark-bg md:pb-20"
+    data-aos="fade-up"
+    data-aos-delay=".4"
+  /> -->
+  <!-- <LogoCloudStatic /> -->
+
+  <FeatureCodeToggle />
+  <FeatureCardsSmall2 />
+  <!-- <FeatureCardsMedium /> -->
+  <FeatureSteps />
+  <!-- <FeatureVideo /> -->
+  <!-- <FeatureSideImage /> -->
+  <!-- <FeatureCardsSmall /> -->
+  <!-- <FeatureNumbers /> -->
+  <FeatureIntegrations />
+
+  <!-- <TestimonialsMarquee /> -->
+  <!-- <TestimonialsColumns /> -->
+  <TestimonialsSwiperQuotes />
+
+  <!-- <PricingTable /> -->
+  <!-- <PricingThreeCards /> -->
+  <PricingOnePrice />
+  <!-- <PricingFourCards /> -->
+
+  <!-- <CtaSideImage /> -->
+  <!-- <CtaCardBgImage /> -->
+  <CtaBgImage />
+  <!-- <CtaLightning /> -->
+
+  <FaqAccordions />
+  <!-- <FaqCards /> -->
+</BaseLayout>

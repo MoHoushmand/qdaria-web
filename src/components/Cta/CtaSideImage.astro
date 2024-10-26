@@ -1,0 +1,59 @@
+---
+/**
+ * * CTA card center with dark background and light text
+ */
+
+import { Icon } from "astro-icon";
+import { Image } from "astro:assets";
+
+// components
+import Button from "@components/Button/Button.astro";
+import Badge from "@components/Badge/Badge.astro";
+import NewsletterForm from "@components/Forms/NewsletterForm.astro";
+
+// image
+import sideImage from "@images/storm-1.webp";
+---
+
+<section id="cta-image" class="dark overflow-clip bg-dark-bg py-10 md:py-16">
+  <div class="flex flex-wrap md:grid md:grid-cols-11">
+    <!-- set 2xl:max-h-[] to be about the height of the content on the right on desktop view -->
+    <div
+      class="w-full md:order-2 md:col-span-5 lg:pl-14 xl:mr-auto 2xl:max-h-[700px]"
+    >
+      <div class="h-full overflow-hidden">
+        <Image
+          src={sideImage}
+          alt="laptop"
+          loading="lazy"
+          width={1000}
+          densities={[1, 1.5, 2]}
+          class="h-full w-full transform object-cover"
+          aria-hidden="true"
+        />
+      </div>
+    </div>
+    <div class="flex-1 p-8 md:col-span-6 lg:p-14">
+      <div class="flex h-full flex-col">
+        <div class="ml-auto px-4 pb-16 md:max-w-xl md:py-16">
+          <Badge>Get Amplify</Badge>
+          <h2 class="h2">Ready to take your brand to the top?</h2>
+          <p class="description tracking-tight">
+            A template for the next killer SaaS. Multiple pages and sections,
+            blog, i18n, animations, CMS - all ready to go.
+          </p>
+          <NewsletterForm
+            name="hero-newsletter"
+            class="mt-20 w-full max-w-[400px] text-base-100"
+          />
+          <p
+            class="mt-10 text-sm tracking-tight text-base-600/80 dark:text-base-400/80"
+          >
+            This website uses cookies and other tracking tools to provide you
+            with the best experience.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

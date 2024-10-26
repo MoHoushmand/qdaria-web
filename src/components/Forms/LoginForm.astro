@@ -1,0 +1,96 @@
+---
+import { Icon } from "astro-icon";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// components
+import Button from "@components/Button/Button.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+
+// data
+const currLocale = getLocaleFromUrl(Astro.url);
+---
+
+<div class="w-full">
+  <div class="mb-12">
+    <h1 class="h2 mb-2 text-xl text-base-900 dark:text-base-200">
+      Log in to your account
+    </h1>
+    <p class="tracking-tight text-base-600 dark:text-base-400">
+      <span class="description">Don’t have an account?</span>
+      <a
+        class="whitespace-nowrap text-primary-500 transition duration-200 hover:text-primary-600"
+        href={getRelativeLocaleUrl(currLocale, "/signup")}
+        >Create a free account</a
+      >
+    </p>
+  </div>
+  <div class="mb-6">
+    <form class="-m-2 flex flex-wrap" id="login__form" name="login__form">
+      <div class="w-full p-2">
+        <label class="block">
+          <input
+            class="form__input w-full"
+            id="login__email"
+            type="email"
+            placeholder="Email Address"
+            autofocus
+            required
+          />
+        </label>
+      </div>
+      <div class="w-full p-2">
+        <label class="relative block transition">
+          <input
+            class="form__input w-full md:pr-40"
+            id="login__password"
+            type="password"
+            placeholder="Password"
+            required
+          />
+          <a
+            class="inline-block pb-4 text-sm tracking-tight text-primary-500 transition duration-200 hover:text-primary-600 sm:absolute sm:right-4 sm:top-1/2 sm:-translate-y-1/2 sm:transform sm:p-0 sm:px-1"
+            href={getRelativeLocaleUrl(currLocale, "/password-reset")}
+            >Forgot Password?</a
+          >
+        </label>
+      </div>
+      <div class="w-full p-2">
+        <Button
+          variant="primary"
+          type="submit"
+          class="w-full rounded-md before:rounded-md">Sign In</Button
+        >
+        <div class="-mx-2.5 my-2 flex items-center">
+          <div class="flex-1 p-2.5">
+            <div class="h-px bg-base-300 dark:bg-base-700"></div>
+          </div>
+          <div class="auto p-2.5">
+            <span
+              class="text-sm tracking-tight text-base-600 dark:text-base-400"
+              >OR</span
+            >
+          </div>
+          <div class="flex-1 p-2.5">
+            <div class="h-px bg-base-300 dark:bg-base-700"></div>
+          </div>
+        </div>
+
+        <!-- Google sign in button -->
+        <a
+          class="flex w-full justify-center rounded-md bg-base-200 px-5 py-2.5 font-medium tracking-tight transition duration-200 hover:bg-base-300 focus:outline-none focus:ring-4 focus:ring-primary-300"
+          href="#"
+        >
+          <Icon
+            name="amplify/google"
+            aria-hidden="true"
+            class="mr-3 size-6 shrink-0"
+          />
+          <span class="hidden text-base-900 xs:block">Sign in with Google</span
+          ><span class="text-base-900 xs:hidden">Google</span>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

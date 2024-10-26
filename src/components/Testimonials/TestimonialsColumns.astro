@@ -1,0 +1,44 @@
+---
+/**
+ * * Testimonials section columns (not swiper)
+ */
+
+import { Icon } from "astro-icon";
+
+// components
+import TestimonialCard from "./TestimonialItemCard.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getTranslatedData } from "@js/translationUtils";
+
+// data
+const currLocale = getLocaleFromUrl(Astro.url);
+const testimonialData = getTranslatedData("testimonialData", currLocale);
+---
+
+<section id="testimonials-columns" class="py-16 md:py-20">
+  <div class="site-container">
+    <div class="mx-auto mb-16 text-center md:max-w-4xl" data-aos="fade-up">
+      <Badge>200+ Happy customers</Badge>
+      <div>
+        <h2 class="h2 inline">What our clients say</h2>
+      </div>
+      <p class="description mt-4 text-lg md:text-xl">
+        Use and reuse tons of responsive sections to create the perfect layout.
+      </p>
+    </div>
+    <div
+      class="mx-auto grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      data-aos="fade-up"
+      data-aos-delay=".2"
+    >
+      {
+        testimonialData.map((testimonial, idx) => (
+          <TestimonialCard {...testimonial} class="" />
+        ))
+      }
+    </div>
+  </div>
+</section>

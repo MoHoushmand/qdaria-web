@@ -1,0 +1,178 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// components
+import FooterLink from "@components/Footer/FooterLink.astro";
+import SiteLogo from "@components/SiteLogo/SiteLogo.astro";
+import Button from "@components/Button/Button.astro";
+import SocialIcon from "@components/SocialIcon/SocialIcon.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { getTranslatedData } from "@js/translationUtils";
+
+// data
+const currLocale = getLocaleFromUrl(Astro.url);
+const siteData = getTranslatedData("siteData", currLocale);
+
+const today = new Date();
+---
+
+<footer class="mt-14 overflow-clip pb-10 pt-16">
+  <div class="site-container">
+    <div class="border-b border-b-base-200 pb-10 dark:border-b-base-800">
+      <div class="flex flex-wrap">
+        <div class="mb-6 w-full md:w-1/2">
+          <div class="max-w-xs">
+            <SiteLogo />
+            <p class="description mt-11 tracking-tight">
+              A template for the next killer SaaS. Multiple pages and sections,
+              blog, i18n, animations, CMS - all ready to go.
+            </p>
+          </div>
+        </div>
+        <div class="w-full md:w-1/2">
+          <div class="flex flex-wrap justify-between gap-x-16 gap-y-8">
+            <!-- first links column -->
+            <div class="w-auto py-2">
+              <h3
+                class="mb-8 font-medium tracking-tight text-base-800 dark:text-base-300"
+              >
+                Landing Pages
+              </h3>
+              <ul class="flex flex-col gap-3">
+                <li>
+                  <FooterLink href={getRelativeLocaleUrl(currLocale, "/")}
+                    >Landing 1</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(
+                      currLocale,
+                      "/examples/landing2",
+                    )}>Landing 2</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(
+                      currLocale,
+                      "/examples/landing3",
+                    )}>Landing 3</FooterLink
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <!-- second links column -->
+            <div class="w-auto py-2">
+              <h3
+                class="mb-8 font-medium tracking-tight text-base-800 dark:text-base-300"
+              >
+                Sections
+              </h3>
+              <ul class="flex flex-col gap-3">
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(
+                      currLocale,
+                      "/examples/features",
+                    )}>Features</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(currLocale, "/examples/pricing")}
+                    >Pricing</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(
+                      currLocale,
+                      "/examples/testimonials-faq",
+                    )}>Testimonial & FAQ</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(
+                      currLocale,
+                      "/examples/hero-sections",
+                    )}>Hero</FooterLink
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <!-- third links column -->
+            <div class="w-auto py-2">
+              <h3
+                class="mb-8 font-medium tracking-tight text-base-800 dark:text-base-300"
+              >
+                Forms
+              </h3>
+              <ul class="flex flex-col gap-3">
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(currLocale, "/contact")}
+                    >Contact</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink href={getRelativeLocaleUrl(currLocale, "/login")}
+                    >Login</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink href={getRelativeLocaleUrl(currLocale, "/signup")}
+                    >Signup</FooterLink
+                  >
+                </li>
+                <li>
+                  <FooterLink
+                    href={getRelativeLocaleUrl(currLocale, "/password-reset")}
+                    >Password Reset</FooterLink
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="py-4">
+      <div class="flex flex-wrap items-center justify-between">
+        <div class="w-auto p-4">
+          <p class="description tracking-tight">
+            &copy; {today.getFullYear()}
+            {" "}{siteData.name}. All rights reserved.
+          </p>
+        </div>
+        <div class="w-auto p-4">
+          <!-- Socials -->
+          <div class="flex flex-col">
+            <div class="flex gap-3">
+              <SocialIcon
+                href="https://twitter.com/BowTiedWebReapr"
+                icon="tabler/brand-x"
+                social="twitter (x)"
+              />
+              <SocialIcon
+                href="https://twitter.com/BowTiedWebReapr"
+                icon="tabler/brand-facebook"
+                social="facebook"
+              />
+              <SocialIcon
+                href="https://twitter.com/BowTiedWebReapr"
+                icon="tabler/brand-google-filled"
+                social="google"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

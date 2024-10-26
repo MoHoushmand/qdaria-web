@@ -1,0 +1,19 @@
+---
+// main layout
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+// components
+import SignupForm from "@components/Forms/SignupForm.astro";
+import SiteLogoSquare from "@components/SiteLogo/SiteLogoSquare.astro";
+---
+
+<BaseLayout title="Sign Up" description="Sign Up for this awesome software">
+  <div class="pt-24 md:pt-36">
+    <div
+      class="mx-auto flex w-full max-w-md flex-col justify-center gap-6 px-4"
+    >
+      <SiteLogoSquare />
+      <SignupForm />
+    </div>
+  </div>
+</BaseLayout>

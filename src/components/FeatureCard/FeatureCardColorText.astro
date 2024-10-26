@@ -1,0 +1,33 @@
+---
+/**
+ * * These are medium cards with an icon, large colored text (title), and smaller description (text)
+ * This has a border and background color
+ *
+ * ! If you can an error for an icon like "Error: Not Found: "calendar-check" in pack "tabler",
+ * ! You can copy to actual SVG into src/icons and name it however and use similar to below
+ */
+
+import { Icon } from "astro-icon";
+
+interface Props {
+  icon: string;
+  title: string;
+  text: string;
+  rest?: any; // catch-all for any additional parameters, such as "aria-label"
+}
+
+const { icon, title, text, ...rest } = Astro.props as Props;
+---
+
+<div {...rest}>
+  <div
+    class="hover-border-glow flex h-full flex-col gap-4 rounded-xl border border-base-200 bg-base-100 p-6 before:rounded-xl dark:border-base-800 dark:bg-base-950"
+  >
+    <!-- <Icon name={icon} class="mt-1 h-5 w-5" aria-hidden="true" /> -->
+    <h3 class="text-5xl font-medium text-primary-600 dark:text-primary-400">
+      {title}
+    </h3>
+
+    <p class="">{text}</p>
+  </div>
+</div>

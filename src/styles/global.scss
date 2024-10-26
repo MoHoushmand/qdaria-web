@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* https://tailwindcss.com/docs/adding-custom-styles#using-css-and-layer */
+@layer base {
+  :root {
+    // custom shiki styling for markdown code blocks. These are the variables Astro uses
+    // Shiki Themes: https://shiki.style/themes   https://shiki.matsu.io/guide/theme-colors#css-variables-theme
+    --astro-code-color-text: #ffffff;
+    --astro-code-color-background: #0a0a0a;
+    --astro-code-token-constant: #bae6fd;
+    --astro-code-token-string: #624fb0; // I don't see this ever used, but it's here if you need it
+    --astro-code-token-comment: #a1a1aad0;
+    --astro-code-token-keyword: #d4d4d8d0;
+    --astro-code-token-parameter: #bae6fd; // I don't see this ever used, but it's here if you need it
+    --astro-code-token-function: #60a5fa;
+    --astro-code-token-string-expression: #60a5fa;
+    --astro-code-token-punctuation: #d4d4d8d0;
+    --astro-code-token-link: #ffffff;
+  }
+
+  html {
+    @apply text-base leading-[1.6rem];
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar {
+    @apply h-0.5 w-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-inherit;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-base-500 bg-opacity-70;
+  }
+
+  /* default focus styling when tabbing through items on a page */
+  * :focus-visible {
+    @apply rounded-sm outline-primary-500;
+  }
+}
+
+/*  things in the components layer can be overriden with utility classes. 
+    Useful for custom styles on third-party components, and things like 
+    btn, card, badge, etc  */
+@layer components {
+  @import "buttons";
+  @import "prose";
+
+  .h1 {
+    @apply main-text-gradient mb-4 text-5xl font-medium leading-tight tracking-tight md:text-6xl md:leading-tight;
+  }
+
+  .h2 {
+    @apply main-text-gradient mb-4 text-4xl font-medium leading-tight tracking-tight md:text-5xl md:leading-tight;
+  }
+
+  .h3 {
+    @apply text-lg font-medium tracking-tight text-base-900 md:text-xl dark:text-base-100;
+  }
+
+  .description {
+    @apply text-base-700 dark:text-base-400;
+  }
+
+  .site-container {
+    @apply mx-auto max-w-[1200px] px-4;
+  }
+
+  /* used for various form inputs */
+  .form__label {
+    @apply text-base-800 dark:text-base-200;
+  }
+
+  .form__input {
+    @apply w-full rounded-md border border-base-300 bg-base-50 px-4 py-2.5 tracking-tight text-base-700 placeholder-base-500 outline-none transition duration-200;
+    @apply dark:border-base-700 dark:bg-base-900 dark:text-base-300 dark:placeholder-base-500 dark:focus-visible:border-primary-500;
+    @apply focus:border-primary-500 focus:outline-none focus:ring-0 focus-visible:border-primary-500 focus-visible:outline-none;
+  }
+
+  /* styles navbar links */
+  .nav__link--base {
+    @apply font-medium tracking-tight text-base-800 hover:text-base-600 dark:text-base-400 dark:hover:text-base-200;
+  }
+
+  /* likely items you may want to change for all dropdowns - language switcher, mega menu, dropdown */
+  .dropdown--base {
+    @apply absolute rounded-xl border border-solid border-base-200 bg-base-100 dark:border-base-800 dark:bg-base-950;
+  }
+}
+
+@layer utilities {
+  @import "aos";
+
+  .main-text-gradient {
+    @apply bg-gradient-to-br from-base-800 to-base-700 bg-clip-text text-transparent dark:from-base-200 dark:to-base-200/60;
+  }
+
+  /* glow effect on hover used throughout the components */
+  .hover-border-glow {
+    @apply relative transition duration-300;
+    @apply before:absolute before:inset-0.5 before:-z-10 before:rounded-md before:bg-blue-500 before:opacity-0 before:blur before:transition before:duration-300;
+    @apply hover:border-primary-300 hover:before:opacity-100 dark:hover:border-primary-300;
+  }
+
+  /* hover underline effect left-to-right
+     use "group" class on a parent element, and "underline-ltr" and "inline" on the element */
+  .underline-ltr {
+    @apply bg-gradient-to-r from-primary-600 to-primary-600 bg-[length:0%_2px] bg-left-bottom bg-no-repeat transition-[background-size] duration-300 group-hover:bg-[length:100%_2px] dark:from-primary-400 dark:to-primary-400;
+  }
+
+  /* use with "animate-pause" to pause a CSS animation */
+  .pause {
+    animation-play-state: paused !important;
+  }
+}

@@ -1,0 +1,58 @@
+---
+/**
+ * * These are medium cards with icons, titles, and text. With title first
+ * This looks best with 3 or 6 cards
+ *
+ * ! I copy all icons into the src/icons folder and recommend you do the same
+ * ! If the icon is at src/icons/tabler/paint.svg then you put in "tabler/paint"
+ */
+
+// components
+import FeatureCard from "@components/FeatureCard/FeatureCardMedium.astro";
+
+interface FeatureData {
+  icon: string;
+  title: string;
+  text: string;
+}
+
+// data
+const featureData: FeatureData[] = [
+  {
+    icon: "tabler/wand",
+    title: "Real-time insights",
+    text: `Data syncs across your team instantly. Real-time access, with 99.9% uptime.`,
+  },
+  {
+    icon: "tabler/calendar-check",
+    title: "Connect all our contacts",
+    text: `Sync with your calendar apps and contacts. Google, Outlook, ProtonMail, and more.`,
+  },
+  {
+    icon: "tabler/heart",
+    title: "Dashboards for all businesses",
+    text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit totam delectus
+            rerum.`,
+  },
+];
+---
+
+<section id="feature-cards-medium" class="overflow-hidden py-12 md:py-16">
+  <div class="site-container">
+    <div
+      id="trigger-medium-cards"
+      class="grid gap-4 md:grid-cols-3"
+      data-aos="fade-up"
+    >
+      {
+        featureData.map((feature, idx) => (
+          <FeatureCard
+            title={feature.title}
+            text={feature.text}
+            icon={feature.icon}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>

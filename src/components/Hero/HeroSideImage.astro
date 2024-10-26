@@ -1,0 +1,95 @@
+---
+/**
+ * * Hero with image one the side
+ */
+import { Icon } from "astro-icon";
+import { Image } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// components
+import Button from "@components/Button/Button.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { useTranslations } from "@js/translationUtils";
+
+import heroImage from "@images/storm-2.webp";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+---
+
+<!-- "dark" class forces dark mode for this section -->
+<section id="hero-side" class="mt-14 overflow-x-clip">
+  <div class="site-container mx-auto px-4 py-16 md:py-20">
+    <div
+      class="mx-auto grid max-w-md gap-10 text-center md:max-w-5xl md:grid-cols-2 md:text-left xl:items-center"
+    >
+      <div
+        class="mx-auto my-auto w-full pt-4 md:ml-0 md:max-w-[560px] md:py-10 lg:pr-10"
+      >
+        <div
+          class="mx-auto max-w-[400px] md:ml-0"
+          data-aos="fade-up"
+          data-aos-trigger="#hero-side"
+        >
+          <h1
+            class="main-text-gradient mb-6 text-pretty text-5xl font-medium leading-tight tracking-tight md:text-6xl md:leading-tight"
+          >
+            {t("hero_text")}
+          </h1>
+        </div>
+        <p
+          class="description mb-8 text-pretty lg:text-lg"
+          data-aos="fade-up"
+          data-aos-delay=".1"
+          data-aos-trigger="#hero-side"
+        >
+          {t("hero_description")}
+        </p>
+        <div
+          class="mt-6 flex flex-wrap justify-center gap-4 md:justify-start"
+          data-aos="fade-up"
+          data-aos-delay=".2"
+          data-aos-trigger="#hero-side"
+        >
+          <Button
+            variant="primary"
+            href={getRelativeLocaleUrl(currLocale, "/signup")}
+          >
+            Get Started
+          </Button>
+          <Button
+            variant="ghost"
+            arrow="right"
+            href="https://cosmicthemes.com/themes/amplify/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Get Amplify
+          </Button>
+        </div>
+      </div>
+
+      <div
+        class="flex h-full w-full flex-grow items-center"
+        data-aos="fade-in"
+        data-aos-trigger="#hero-side"
+        data-aos-delay=".5"
+      >
+        <div
+          class="relative h-full overflow-hidden rounded-xl border border-base-200 dark:border-base-800"
+        >
+          <Image
+            src={heroImage}
+            class="min-h-full w-auto object-cover"
+            alt="hero"
+            loading="eager"
+            width={500}
+            densities={[1.5, 2]}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,86 @@
+---
+/**
+ * * Logo cloud section marquee
+ *
+ * These are taken from the src/icons folder. You may desire to modify any SVGs you use to have the fill set to "currentColor"
+ * to use the current text color. That is how I have set up these icons for demo purposes
+ */
+
+import { Icon } from "astro-icon";
+---
+
+<section
+  id="logo-cloud-marquee"
+  class="border-y border-base-200 px-4 py-6 text-base-800 dark:border-base-800 dark:text-base-400"
+>
+  <div class="relative mx-auto max-w-[1700px] overflow-hidden">
+    <!-- left fade-out -->
+    <div
+      class="absolute -left-px top-0 z-10 h-full w-[20%] bg-gradient-to-r from-base-50 from-20% to-transparent dark:from-dark-bg"
+    >
+    </div>
+    <!-- right fade-out -->
+    <div
+      class="absolute -right-px top-0 z-10 h-full w-[20%] bg-gradient-to-r from-transparent to-base-50 to-80% dark:to-dark-bg"
+    >
+    </div>
+
+    <div class="logo-marquee relative flex gap-20">
+      <!-- Each animate-marquee2 section needs to have the exact same icons. Just do one then copy / paste -->
+      <div
+        class="flex min-w-full shrink-0 animate-marquee2 items-center justify-around gap-20"
+      >
+        <Icon name="logos/astro" class="logo py-2" aria-label="logo" />
+
+        <Icon name="logos/spotify" class="logo" aria-label="logo" />
+
+        <Icon name="logos/framer" class="logo" aria-label="logo" />
+
+        <Icon name="logos/dribbble" class="logo" aria-label="logo" />
+
+        <Icon name="logos/sanity" class="logo py-2" aria-label="logo" />
+
+        <Icon name="logos/contentfull" class="logo" aria-label="logo" />
+
+        <Icon name="logos/github" class="logo" aria-label="logo" />
+
+        <Icon name="logos/notion" class="logo" aria-label="logo" />
+
+        <Icon name="logos/adobe" class="logo" aria-label="logo" />
+
+        <Icon name="logos/zoom" class="logo" aria-label="logo" />
+      </div>
+
+      <div
+        aria-hidden="true"
+        class="flex min-w-full shrink-0 animate-marquee2 items-center justify-around gap-20"
+      >
+        <Icon name="logos/astro" class="logo py-2" aria-label="logo" />
+
+        <Icon name="logos/spotify" class="logo" aria-label="logo" />
+
+        <Icon name="logos/framer" class="logo" aria-label="logo" />
+
+        <Icon name="logos/dribbble" class="logo" aria-label="logo" />
+
+        <Icon name="logos/sanity" class="logo py-2" aria-label="logo" />
+
+        <Icon name="logos/contentfull" class="logo" aria-label="logo" />
+
+        <Icon name="logos/github" class="logo" aria-label="logo" />
+
+        <Icon name="logos/notion" class="logo" aria-label="logo" />
+
+        <Icon name="logos/adobe" class="logo" aria-label="logo" />
+
+        <Icon name="logos/zoom" class="logo" aria-label="logo" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .logo {
+    @apply h-10 w-auto md:h-12;
+  }
+</style>

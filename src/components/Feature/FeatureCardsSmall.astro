@@ -1,0 +1,88 @@
+---
+/**
+ * * These are small cards with icons, titles, and text. With title first
+ * This looks best with an even number of cards. They are smaller to
+ * use with more cards in the same section. 4 or 6 cards is probably ideal
+ *
+ * ! I copy all icons into the src/icons folder and recommend you do the same
+ * ! If the icon is at src/icons/tabler/paint.svg then you put in "tabler/paint"
+ */
+
+import { Icon } from "astro-icon";
+
+// components
+import FeatureCard from "@components/FeatureCard/FeatureCardSmall.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+interface FeatureData {
+  icon: string;
+  title: string;
+  text: string;
+}
+
+// data
+const featureData: FeatureData[] = [
+  {
+    icon: "tabler/calendar-check",
+    title: "Connect all our contacts",
+    text: `Sync with your calendar apps and contacts. Google, Outlook, ProtonMail, and more.`,
+  },
+  {
+    icon: "tabler/heart",
+    title: "Dashboards for all businesses",
+    text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit totam delectus
+            rerum, reiciendis quisquam cum sunt.`,
+  },
+  {
+    icon: "tabler/cloud",
+    title: "Synced to the cloud",
+    text: `Your data is accessible from everywhere, syncing across all your devices.`,
+  },
+  {
+    icon: "tabler/layout-grid",
+    title: "Your business intelligence, simplified",
+    text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit totam delectus
+            rerum.`,
+  },
+  {
+    icon: "tabler/wand",
+    title: "Real-time insights at your fingertips",
+    text: `Data syncs across your team instantly. Real-time access, with 99.9% uptime.`,
+  },
+  {
+    icon: "tabler/api-app",
+    title: "Connects to popular apps",
+    text: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit totam delectus
+            rerum, reiciendis quisquam cum sunt.`,
+  },
+];
+---
+
+<section id="feature-cards-small" class="py-16 md:py-20">
+  <div class="site-container relative">
+    <div class="mx-auto mb-16 text-center md:max-w-2xl" data-aos="fade-up">
+      <Badge>Features</Badge>
+      <div class="flex justify-center">
+        <h2 class="h2 mb-4">Super slick animations</h2>
+      </div>
+      <p class="description text-pretty text-lg md:text-xl">
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit corporis.
+      </p>
+    </div>
+    <div
+      id="trigger-small-cards"
+      class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+      data-aos="fade-up"
+    >
+      {
+        featureData.map((feature, idx) => (
+          <FeatureCard
+            title={feature.title}
+            text={feature.text}
+            icon={feature.icon}
+          />
+        ))
+      }
+    </div>
+  </div>
+</section>

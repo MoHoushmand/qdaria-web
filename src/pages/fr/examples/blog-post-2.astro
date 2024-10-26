@@ -1,0 +1,26 @@
+---
+import { type InferGetStaticPropsType } from "astro";
+
+// layout
+import BlogLayoutCenter from "@layouts/BlogLayoutCenter.astro";
+import BlogLayoutSidebars from "@layouts/BlogLayoutSidebars.astro";
+
+// components
+import ExternalLink from "@components/MarkdownComponents/ExternalLink.astro";
+
+// utils
+import { getAllPosts } from "@js/blogUtils";
+import { defaultLocale } from "@config/siteSettings.json";
+import { getLocaleFromUrl } from "@js/localeUtils";
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const posts = await getAllPosts(currLocale);
+
+const post = posts[0];
+
+const { Content, headings } = await post.render();
+---
+
+<BlogLayoutCenter post={post} headings={headings}>
+  <Content components={{ a: ExternalLink }} />
+</BlogLayoutCenter>

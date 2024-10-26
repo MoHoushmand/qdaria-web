@@ -1,0 +1,325 @@
+---
+/**
+ * * pricing sections with toggle for monthly or yearly payments
+ * This is designed for 3 pricing items, but can be modified to support more
+ */
+
+import { Icon } from "astro-icon";
+import { Image } from "astro:assets";
+import { getRelativeLocaleUrl } from "astro:i18n";
+
+// components
+import Button from "@components/Button/Button.astro";
+import Badge from "@components/Badge/Badge.astro";
+
+// utils
+import { getLocaleFromUrl } from "@js/localeUtils";
+import { useTranslations } from "@js/translationUtils";
+
+interface pricingItem {
+  name: string; // plan name
+  description: string; // plan description
+  featured?: boolean; // if true, will be highlighted or otherwise featured
+  price: {
+    custom?: boolean; // if true, will show "contact us" instead of price
+    monthly?: number; // monthly price if paid by month
+    yearly?: number; // monthly price if paid by year
+  };
+  features: string[]; // list of features
+  href: string; // button link to sign up or other page
+  linkText: string; // text for the button
+}
+
+// This is designed for 3 pricing items, but can be modified to support more
+const pricingData: pricingItem[] = [
+  {
+    name: "Basic",
+    description: "Essential features for beginners. Get started with ease",
+    price: {
+      monthly: 29,
+      yearly: 19,
+    },
+    features: [
+      "Basic Features",
+      "1 user",
+      "2 GB Free Access",
+      "Limited Support",
+    ],
+    href: "/signup",
+    linkText: "Get Started",
+  },
+  {
+    name: "Professional",
+    description: "Perfect for solo professionals. Unlock advanced features",
+    featured: true,
+    price: {
+      monthly: 49,
+      yearly: 39,
+    },
+    features: [
+      "Pro features",
+      "Up to 10 users",
+      "50 GB Free Access",
+      "Priority support",
+    ],
+    href: "/signup",
+    linkText: "Get Started",
+  },
+  {
+    name: "Enterprise",
+    description: "Scale your business faster. Comprehensive plan",
+    price: {
+      monthly: 99,
+      yearly: 79,
+    },
+    features: [
+      "Pro features",
+      "Unlimited Users",
+      "200 GB Free Access",
+      "Premium Support",
+    ],
+    href: "/signup",
+    linkText: "Get Started",
+  },
+  {
+    name: "Contact Us",
+    description: "For bespoke solutions tailored to your business needs",
+    price: {
+      custom: true,
+    },
+    features: [
+      "White Glove Onboarding",
+      "All Features",
+      "unlimited Users",
+      "Dedicated support",
+    ],
+    href: "/contact",
+    linkText: "Contact Us",
+  },
+];
+
+const currLocale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(currLocale);
+---
+
+<section id="pricing" class="py-16 md:py-20">
+  <div class="relative mx-auto max-w-7xl px-4">
+    <div class="flex justify-center">
+      <!-- <Badge>Pricing</Badge> -->
+    </div>
+    <div class="flex justify-center">
+      <h2 class="h2 inline text-center">A plan for every business</h2>
+    </div>
+
+    <!-- Toggle switch for monthly or yearly pricing -->
+    <div class="mt-6 flex justify-center">
+      <label
+        for="pricing-plan__toggle"
+        class="relative inline-flex cursor-pointer select-none items-center"
+      >
+        <input
+          type="checkbox"
+          name="pricing-plan__toggle"
+          id="pricing-plan__toggle"
+          class="pricing-plan__toggle sr-only"
+          aria-label="Toggle between monthly and yearly pricing"
+        />
+        <span class="description flex items-center">Monthly</span>
+        <span
+          class="pricing-plan__slider mx-4 flex h-7 w-[56px] items-center rounded-full border border-base-300 bg-base-100 p-1 duration-200 dark:border-base-700 dark:bg-base-900"
+        >
+          <span
+            class="pricing-plan__dot size-5 rounded-full bg-base-800 duration-200 dark:bg-base-200"
+          ></span>
+        </span>
+        <span class="description flex items-center">Yearly</span>
+      </label>
+    </div>
+
+    <!-- works for 3 pricing plans, adjust grid cols here to support more or less -->
+    <div
+      class="mx-auto mt-16 grid w-full gap-6 sm:grid-cols-2 md:mt-20 lg:grid-cols-4"
+    >
+      {
+        pricingData.map((plan) => (
+          <div class="pricing-plan w-full">
+            <div
+              class="relative flex h-full flex-col justify-between rounded-xl border bg-base-100 p-8 text-center dark:bg-base-950"
+              class:list={[
+                {
+                  "border-primary-300 before:absolute before:inset-0.5 before:-z-10 before:rounded-xl before:bg-blue-500 before:blur":
+                    plan.featured === true,
+                },
+                {
+                  "border-base-200 dark:border-base-800":
+                    plan.featured !== true,
+                },
+              ]}
+            >
+              <div class="">
+                <h3
+                  class="mb-8 text-lg font-medium tracking-tight"
+                  class:list={[
+                    {
+                      "text-primary-600 dark:text-primary-400":
+                        plan.featured === true,
+                    },
+                    {
+                      "text-base-800 dark:text-base-300":
+                        plan.featured !== true,
+                    },
+                  ]}
+                >
+                  {plan.name}
+                </h3>
+                {plan.price.custom === true ? (
+                  // if custom price, show "Custom" instead of price
+                  <>
+                    <h4>
+                      <span class="text-4xl font-medium tracking-tight">
+                        Custom
+                      </span>
+                    </h4>
+                    <span
+                      aria-hidden="true"
+                      class="description invisible inline-block tracking-tight"
+                    >
+                      per user, per month
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <div class="pricing-plan__monthly-price">
+                      <h4 class="text-4xl font-medium tracking-tight">
+                        ${plan.price.monthly} / mo
+                      </h4>
+                      <span class="description inline-block text-sm tracking-tight">
+                        (paid monthly)
+                      </span>
+                    </div>
+                    <div class="pricing-plan__yearly-price hidden">
+                      <h4 class="text-4xl font-medium tracking-tight">
+                        ${plan.price.yearly} / mo
+                      </h4>
+                      <span class="description inline-block text-sm tracking-tight">
+                        (paid yearly)
+                      </span>
+                    </div>
+                  </>
+                )}
+
+                <div class="mt-8 border-y border-base-200 py-8 dark:border-base-800">
+                  <p
+                    class="description mx-auto max-w-xs tracking-tight"
+                    class:list={[
+                      {
+                        "text-base-800 dark:text-base-300":
+                          plan.featured === true,
+                      },
+                    ]}
+                  >
+                    {plan.description}
+                  </p>
+                </div>
+                <ul class="py-8">
+                  {plan.features.map((feature) => (
+                    <li class="mb-2.5 flex flex-wrap items-center gap-3">
+                      <Icon
+                        name="tabler/check"
+                        class="size-5 text-primary-600 dark:text-primary-400"
+                        aria-hidden="true"
+                      />
+                      <span
+                        class="font-medium tracking-tight"
+                        class:list={[
+                          {
+                            "text-base-800 dark:text-base-300":
+                              plan.featured !== true,
+                          },
+                        ]}
+                      >
+                        {feature}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <Button
+                class="mb-0"
+                variant={plan.featured === true ? "primary" : "outline"}
+                href={getRelativeLocaleUrl(currLocale, plan.href)}
+              >
+                {plan.linkText}
+              </Button>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  function pricingPlanToggleSetup() {
+    // toggle between monthly and yearly pricing
+    const pricingToggle = document.querySelector(
+      ".pricing-plan__toggle",
+    ) as HTMLInputElement;
+
+    const pricingToggleSlider = document.querySelector(
+      ".pricing-plan__slider",
+    ) as HTMLInputElement;
+
+    const pricingToggleDot = document.querySelector(
+      ".pricing-plan__dot",
+    ) as HTMLInputElement;
+
+    // each pricing plan has a monthly price and a yearly price
+    const pricingPlans = document.querySelectorAll(
+      ".pricing-plan",
+    ) as NodeListOf<HTMLElement>;
+
+    // each plan has monthly and yearly price
+    pricingPlans.forEach((pricingPlan) => {
+      const monthlyPrice = pricingPlan.querySelector(
+        ".pricing-plan__monthly-price",
+      ) as HTMLElement;
+
+      const yearlyPrice = pricingPlan.querySelector(
+        ".pricing-plan__yearly-price",
+      ) as HTMLElement;
+
+      if (
+        pricingToggle &&
+        pricingToggleDot &&
+        pricingToggleSlider &&
+        monthlyPrice &&
+        yearlyPrice
+      ) {
+        pricingToggle.addEventListener("change", (event) => {
+          if (pricingToggle.checked) {
+            // if checked, then yearly price
+            monthlyPrice.classList.add("hidden");
+            yearlyPrice.classList.remove("hidden");
+            pricingToggleDot.classList.add("translate-x-[26px]");
+            pricingToggleSlider.classList.add("border-primary-400");
+            pricingToggleSlider.classList.add("dark:border-primary-600");
+          } else {
+            // if unchecked, then monthly price
+            monthlyPrice.classList.remove("hidden");
+            yearlyPrice.classList.add("hidden");
+            pricingToggleDot.classList.remove("translate-x-[26px]");
+            pricingToggleSlider.classList.remove("border-primary-400");
+            pricingToggleSlider.classList.remove("dark:border-primary-600");
+          }
+        });
+      }
+    });
+  }
+
+  // runs on initial page load
+  pricingPlanToggleSetup();
+
+  // runs on view transitions navigation
+  document.addEventListener("astro:after-swap", pricingPlanToggleSetup);
+</script>
